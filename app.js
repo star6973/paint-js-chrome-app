@@ -1,31 +1,49 @@
 const canvas = document.getElementById("jsCanvas")
+const ctx = canvas.getContext("2d") // context란 canvas내의 픽셀에 접근할 수 있는 방법
+const colors = document.getElementsByClassName("jsColor")
+
+canvas.width = 700
+canvas.height = 700
+ctx.strokeStyle = "#2C2C2C"
+ctx.lineWidth = 2.5
 
 let painting = false
 
-function stopPaining() {
-    painting = false
+function startPainting() {
+    painting = true
 }
 
-function onMouseMove(event) {
-    const offsetX = event.offsetX
-    const offsetY = event.offsetY
+function stopPainting() {
+    painting = false
 }
 
 function onMouseDown(event) {
     painting = true
 }
 
-function onMouseUp(event) {
-    stopPaining()
-}
+function onMouseMove(event) {
+    const x = event.offsetX
+    const y = event.offsetY
 
-function onMouseLeave(event) {
-    painting = false
+    if (painting === false) { // 마우스를 손에서 떼어냈을 경우
+        ctx.beginPath() // 선을 만듦
+        ctx.moveTo(x, y) // path를 만들면 마우스의 x, y좌표로 path를 옮김 => path의 시작점은 현재 마우스 포인트 위치
+    } else { // 마우스를 클릭했을 경우
+        ctx.lineTo(x, y) // path의 이전 위치에서부터 현재 위치까지 선을 만듦
+        ctx.stroke() // 마우스를 움직이는 내내 생성되지만, 클릭하는 순간 보여진다
+    }
 }
 
 if (canvas) {
     canvas.addEventListener("mousemove", onMouseMove)
-    canvas.addEventListener("mousedown", onMouseDown)
-    canvas.addEventListener("mouseup", onMouseUp)
-    canvas.addEventListener("mouseleave", stopPaining)
+    canvas.addEventListener("mousedown", startPainting)
+    canvas.addEventListener("mouseup", stopPainting)
+    canvas.addEventListener("mouseleave", stopPainting)
 }
+
+function onSelectColor(event) {
+    const color = event.target.style.backgroundColor
+    ctx.strokeStyle = color
+}
+
+Array.from(colors).forEach(color => color.addEventListener("click", onSelectColor))
