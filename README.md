@@ -1,4 +1,4 @@
-# paint-js-chrome-app
+# vanilla-js-paint-app
 ## Description
 - 바닐라 JS로 그림판 만들기
 - 색상 선택
